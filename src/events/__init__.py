@@ -14,6 +14,7 @@ import os, sys
 sys.path.append("..")
 
 from src.utils.tk_utils import selectPath
+from src.configEditor_launcher import UI as configEditor_show
 
 
 class UI_Var:
@@ -30,6 +31,6 @@ class UI_Events:
             if os.path.exists(sel_path):
                 self.Text1Var.set(sel_path)
 
-    def mainBtn_open_config_editor_Cmd(self, subFormConfig):
-        """打开一个子窗口"""
-        pass
+    # def mainBtn_open_config_editor_Cmd(self, subFormConfig):
+    #     """打开一个子窗口"""
+    #     configEditor_show()

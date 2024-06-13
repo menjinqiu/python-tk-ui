@@ -18,6 +18,9 @@ from src.ui.main import Application
 from src.config import Config
 from src.events import UI_Events
 
+from src.configEditor_launcher import UI as configEditor_show
+from src.configEditor_launcher import SubWindowConfig
+
 
 def check(config: Config):
     if float(tkinter.TkVersion) < 8.6:
@@ -36,6 +39,7 @@ class UI(UI_Events, Application):
         super().__init__(main_tk)
 
         self.master.title(config.title)
+        self.config = config
 
         screenWidth = main_tk.winfo_screenwidth()  # 获取显示区域的宽度
         screenHeight = main_tk.winfo_screenheight()  # 获取显示区域的高度
@@ -61,6 +65,18 @@ class UI(UI_Events, Application):
             self.Text1Var.set(files[0].decode(encodeing))
 
         windnd.hook_dropfiles(self.master, func=dragged_files)
+
+    def mainBtn_open_config_editor_Cmd(self, subFormConfig):
+        """打开一个子窗口"""
+
+        subConfig = SubWindowConfig(
+            title="配置编辑器",
+            width=300,
+            height=500,
+            left=self.master.winfo_x() + self.config.width + 5,
+            left=self.master.winfo_y() + self.config.height + 5,
+        )
+        configEditor_show(subConfig)
 
 
 def start_with_ui():
