@@ -1,59 +1,35 @@
-# -*- coding: utf-8 -*-
-#
-# @Author: CPS
-# @email: 373704015@qq.com
-# @Date: 2024-05-30 09:36:14.265723
-# @Last Modified by: CPS
-# @Last Modified time: 2024-05-30 09:36:14.265723
-# @file_path "W:\CPS\MyProject\projsect_persional\python-tk-ui-learn\src"
-# @Filename "test2.py"
-# @Description: 功能描述
-#
-
-import tkinter
-from tkinter.messagebox import showinfo, showwarning
-
-from ui import Application
-from config import Config
-from events import UI_Events
+import tkinter as tk
+from tkinter import Toplevel, Button
 
 
-def check(config: Config):
-    if float(tkinter.TkVersion) < 8.6:
-        showwarning("版本过低提示", "注意，当前tk版本过低，可能存在未知问题")
+def create_subwindow():
+    # 获取主窗口的几何信息
+    root_width = root.winfo_width()
+    root_height = root.winfo_height()
+    root_x = root.winfo_x()
+
+    # 设置子窗口的初始位置，紧接在主窗口右边，并有一个间距（例如20像素）
+    sub_window_x = root_x + root_width + 5
+    sub_window_y = root.winfo_y()  # 或者你可以设置一个固定的y值，使子窗口与主窗口顶部对齐
+
+    # 创建一个新的Toplevel窗口，并设置其初始位置
+    sub_window = Toplevel(root)
+    sub_window.geometry(f"+{sub_window_x}+{sub_window_y}")  # 设置位置和大小（例如 300x200）
+    sub_window.title("子窗口")
+
+    # 在这里，你可以添加子窗口的其他组件
+    label = tk.Label(sub_window, text="这是一个子窗口")
+    label.pack(pady=20)
 
 
-class UI(UI_Events, Application):
-    # 这个类实现具体的事件处理回调函数。界面生成代码在Application_ui中。
-    def __init__(self, config: Config):
-        super().__init__(tkinter.Tk())
+# 创建主窗口
+root = tk.Tk()
+root.title("主窗口")
+root.geometry("300x200")  # 设置主窗口的大小，以便测试位置
 
-        self.master.title(config.title)
-        self.master.geometry(f"{config.width}x{config.height}")
-        if config.dragged_file_enable:
-            self.init_dragged_file()
+# 创建一个按钮，点击时调用create_subwindow函数
+button = Button(root, text="打开子窗口", command=create_subwindow)
+button.pack(pady=20)
 
-        check(config)
-
-        self.createWidgets()
-        self.process_start()
-
-    def process_start(self):
-        self.mainloop()
-
-    def init_dragged_file(self):
-        # dragged_file(self.master)
-        import windnd
-
-        def dragged_files(files, encodeing="gbk"):
-            if len(files) > 1:
-                showwarning("文件太多", "仅支持单个文件识别")
-            self.Text1Var.set(files[0].decode(encodeing))
-
-        windnd.hook_dropfiles(self.master, func=dragged_files)
-
-
-if __name__ == "__main__":
-    config = Config
-
-    UI(config)
+# 进入主事件循环
+root.mainloop()

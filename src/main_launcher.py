@@ -14,7 +14,7 @@ import tkinter, os
 
 from tkinter.messagebox import showwarning
 
-from src.ui import Application
+from src.ui.main import Application
 from src.config import Config
 from src.events import UI_Events
 
@@ -23,18 +23,28 @@ def check(config: Config):
     if float(tkinter.TkVersion) < 8.6:
         showwarning("版本过低提示", "注意，当前tk版本过低，可能存在未知问题")
 
+    # 校验config对象
+    pass
+
 
 class UI(UI_Events, Application):
     # 这个类实现具体的事件处理回调函数。界面生成代码在Application_ui中。
     def __init__(self, config: Config):
-        super().__init__(tkinter.Tk())
+        check(config)
+
+        main_tk = tkinter.Tk()
+        super().__init__(main_tk)
 
         self.master.title(config.title)
-        self.master.geometry(f"{config.width}x{config.height}")
+
+        screenWidth = main_tk.winfo_screenwidth()  # 获取显示区域的宽度
+        screenHeight = main_tk.winfo_screenheight()  # 获取显示区域的高度
+        left = int((screenWidth - config.width) / 2)  # 定位x
+        top = int((screenHeight - config.height) / 2 * 0.8)  # 定位y
+
+        self.master.geometry(f"{config.width}x{config.height}+{left}+{top}")
         if config.dragged_file_enable:
             self.init_dragged_file()
-
-        check(config)
 
         self.createWidgets()
         self.process_start()

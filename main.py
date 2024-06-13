@@ -7,13 +7,13 @@
 # @Last Modified time: 2024-06-03 09:33:01.386735
 # @file_path "W:\CPS\MyProject\projsect_persional\python-tk-ui-learn"
 # @Filename "main.py"
-# @Description: 功能描述
+# @Description: 入口文件
 #
-import os, sys
+import sys
 
 sys.path.append("..")
 
-from src.launcher import start_with_ui
+from src.main_launcher import start_with_ui
 
 if __name__ == "__main__":
     start_with_ui()

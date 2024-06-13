@@ -21,15 +21,15 @@ class UI_Var:
 
 
 class UI_Events:
-    def Command1_Cmd(self, event=None):
+    def mainBtn_sel_file_Cmd(self, event=None):
+        """选择文件的按钮"""
+
         # 点击按钮打开文件的调用
         sel_path = selectPath("file")
         if sel_path:
             if os.path.exists(sel_path):
                 self.Text1Var.set(sel_path)
-            # showinfo("已选配置文件：", sel_path)
 
-    def Command2_Cmd(self, event=None):
-        # 拖拽文件到识别区域的调用
-        print("Command2_Cmd")
-        # showinfo("Command2_Cmd", self.Text1Var.get())
+    def mainBtn_open_config_editor_Cmd(self, subFormConfig):
+        """打开一个子窗口"""
+        pass
