@@ -21,6 +21,8 @@ from src.events import UI_Events
 from src.configEditor_launcher import UI as configEditor_show
 from src.configEditor_launcher import SubWindowConfig
 
+from enum import Enum
+
 
 def check(config: Config):
     if float(tkinter.TkVersion) < 8.6:
@@ -34,12 +36,13 @@ class UI(UI_Events, Application):
     # 这个类实现具体的事件处理回调函数。界面生成代码在Application_ui中。
     def __init__(self, config: Config):
         check(config)
-
         main_tk = tkinter.Tk()
         super().__init__(main_tk)
 
         self.master.title(config.title)
         self.config = config
+
+        self.configEditor = None  # close 或者 open
 
         screenWidth = main_tk.winfo_screenwidth()  # 获取显示区域的宽度
         screenHeight = main_tk.winfo_screenheight()  # 获取显示区域的高度
@@ -50,6 +53,7 @@ class UI(UI_Events, Application):
         if config.dragged_file_enable:
             self.init_dragged_file()
 
+        self.master.protocol("WM_DELETE_WINDOW", self.on_close)
         self.createWidgets()
         self.process_start()
 
@@ -66,17 +70,26 @@ class UI(UI_Events, Application):
 
         windnd.hook_dropfiles(self.master, func=dragged_files)
 
-    def mainBtn_open_config_editor_Cmd(self, subFormConfig):
+    def mainBtn_open_config_editor_Cmd(self):
         """打开一个子窗口"""
+        if self.configEditor is None:
+            sub_height = 500
+            subConfig = SubWindowConfig(
+                title="配置编辑器",
+                width=300,
+                height=sub_height,
+                left=int(self.master.winfo_x() + self.config.width + 5),
+                top=int(self.master.winfo_y()),
+            )
+            self.configEditor = configEditor_show(subConfig, self)
 
-        subConfig = SubWindowConfig(
-            title="配置编辑器",
-            width=300,
-            height=500,
-            left=self.master.winfo_x() + self.config.width + 5,
-            left=self.master.winfo_y() + self.config.height + 5,
-        )
-        configEditor_show(subConfig)
+        else:
+            self.configEditor.on_close()
+            self.configEditor = None
+
+    def on_close(self):
+        self.master.quit()
+        self.master.destroy()
 
 
 def start_with_ui():
